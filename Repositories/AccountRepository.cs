@@ -1,9 +1,14 @@
+using Flare.AccountService.Models;
+
 namespace Flare.AccountService.Repositories;
 
 public class AccountRepository : IAccountRepository
 {
-    public Task<string> CreateAccountAsync()
+    public Task<Account> CreateAccountAsync(Account account)
     {
-        return Task.FromResult("account created");
+        // database operations
+        var createdAccount = account;
+
+        return Task.FromResult(createdAccount);
     }
 }

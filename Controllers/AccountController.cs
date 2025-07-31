@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Flare.AccountService.Services;
+using Flare.AccountService.DTOs;
 
 namespace Flare.AccountService.Controllers;
 
@@ -16,9 +17,9 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAccount()
+    public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request, [FromHeader(Name = "X-User-Id")] Guid userId)
     {
-        var result = await _accountService.CreateAccountAsync();
-        return Ok(result);
+        var response = await _accountService.CreateAccountAsync(request, userId);
+        return Ok(response);
     }
 }
