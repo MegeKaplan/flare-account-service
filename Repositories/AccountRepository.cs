@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 using Flare.AccountService.Models;
 using Flare.AccountService.Data;
 
@@ -10,6 +12,11 @@ public class AccountRepository : IAccountRepository
     public AccountRepository(FlareDbContext db)
     {
         _db = db;
+    }
+
+    public async Task<List<Account>> GetAllAccountsAsync()
+    {
+        return await _db.Accounts.ToListAsync();
     }
 
     public async Task<Account?> GetAccountByIdAsync(Guid userId)

@@ -16,6 +16,21 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllAccounts()
+    {
+        var accounts = await _accountService.GetAllAccountsAsync();
+        return Ok(accounts);
+    }
+
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetAccountById([FromRoute] Guid userId)
+    {
+        var account = await _accountService.GetAccountByIdAsync(userId);
+        if (account == null) return NotFound();
+        return Ok(account);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request, [FromHeader(Name = "X-User-Id")] Guid userId)
     {

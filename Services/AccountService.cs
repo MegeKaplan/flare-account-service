@@ -16,6 +16,16 @@ public class AccountService : IAccountService
         _accountRepository = accountRepository;
     }
 
+    public async Task<List<Account>> GetAllAccountsAsync()
+    {
+        return await _accountRepository.GetAllAccountsAsync();
+    }
+
+    public async Task<Account?> GetAccountByIdAsync(Guid userId)
+    {
+        return await _accountRepository.GetAccountByIdAsync(userId);
+    }
+
     public async Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid userId)
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
