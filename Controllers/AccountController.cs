@@ -41,14 +41,22 @@ public class AccountController : ControllerBase
     [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccountRequest request, [FromRoute] Guid userId)
     {
-        var response = await _accountService.UpdateAccountAsync(request, userId);
+        var principalUserIdHeader = HttpContext.Request.Headers["X-User-Id"].FirstOrDefault();
+
+        if (!Guid.TryParse(principalUserIdHeader, out Guid principalUserId)) return Forbid();
+
+        var response = await _accountService.UpdateAccountAsync(request, principalUserId, userId);
         return Ok(response);
     }
 
     [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteAccount([FromRoute] Guid userId, [FromQuery] bool hard = false)
     {
-        await _accountService.DeleteAccountAsync(userId, hard);
+        var principalUserIdHeader = HttpContext.Request.Headers["X-User-Id"].FirstOrDefault();
+
+        if (!Guid.TryParse(principalUserIdHeader, out Guid principalUserId)) return Forbid();
+
+        await _accountService.DeleteAccountAsync(principalUserId, userId, hard);
         return NoContent();
     }
 }

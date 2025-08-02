@@ -4,6 +4,7 @@ using BCrypt.Net;
 using Flare.AccountService.Repositories;
 using Flare.AccountService.DTOs;
 using Flare.AccountService.Models;
+using Flare.AccountService.Utils;
 
 namespace Flare.AccountService.Services;
 
@@ -52,9 +53,11 @@ public class AccountService : IAccountService
         return response;
     }
 
-    public async Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid userId)
+    public async Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid principalUserId, Guid targetUserId)
     {
-        var account = await _accountRepository.GetAccountByIdAsync(userId) ?? throw new Exception("Account not found");
+        if (!AuthorizationHelper.IsOwner(principalUserId, targetUserId)) throw new UnauthorizedAccessException("You cannot update another user's account");
+
+        var account = await _accountRepository.GetAccountByIdAsync(targetUserId) ?? throw new Exception("Account not found");
 
         account.Email = request.Email ?? account.Email;
         account.Username = request.Username ?? account.Username;
@@ -76,9 +79,11 @@ public class AccountService : IAccountService
         };
     }
 
-    public async Task DeleteAccountAsync(Guid userId, bool hard = false)
+    public async Task DeleteAccountAsync(Guid principalUserId, Guid targetUserId, bool hard = false)
     {
-        var account = await _accountRepository.GetAccountByIdAsync(userId) ?? throw new Exception("Account not found");
+        if (!AuthorizationHelper.IsOwner(principalUserId, targetUserId)) throw new UnauthorizedAccessException("You cannot delete another user's account");
+
+        var account = await _accountRepository.GetAccountByIdAsync(targetUserId) ?? throw new Exception("Account not found");
 
         if (hard)
         {
