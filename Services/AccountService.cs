@@ -65,4 +65,19 @@ public class AccountService : IAccountService
             UpdatedAt = DateTime.UtcNow,
         };
     }
+
+    public async Task DeleteAccountAsync(Guid userId, bool hard = false)
+    {
+        var account = await _accountRepository.GetAccountByIdAsync(userId) ?? throw new Exception("Account not found");
+
+        if (hard)
+        {
+            await _accountRepository.DeleteAccountAsync(account);
+            return;
+        }
+
+        account.DeletedAt = DateTime.UtcNow;
+
+        await _accountRepository.UpdateAccountAsync(account);
+    }
 }

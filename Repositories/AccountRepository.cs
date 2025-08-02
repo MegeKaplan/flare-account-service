@@ -16,7 +16,7 @@ public class AccountRepository : IAccountRepository
     {
         return await _db.Accounts.FindAsync(userId);
     }
-    
+
     public async Task<Account> CreateAccountAsync(Account account)
     {
         _db.Accounts.Add(account);
@@ -29,5 +29,11 @@ public class AccountRepository : IAccountRepository
         _db.Accounts.Update(account);
         await _db.SaveChangesAsync();
         return account;
+    }
+
+    public async Task DeleteAccountAsync(Account account)
+    {
+        _db.Accounts.Remove(account);
+        await _db.SaveChangesAsync();
     }
 }

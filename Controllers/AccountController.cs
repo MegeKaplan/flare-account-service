@@ -29,4 +29,11 @@ public class AccountController : ControllerBase
         var response = await _accountService.UpdateAccountAsync(request, userId);
         return Ok(response);
     }
+
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> DeleteAccount([FromRoute] Guid userId, [FromQuery] bool hard = false)
+    {
+        await _accountService.DeleteAccountAsync(userId, hard);
+        return NoContent();
+    }
 }
