@@ -42,4 +42,27 @@ public class AccountService : IAccountService
         return response;
     }
 
+    public async Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid userId)
+    {
+        var account = await _accountRepository.GetAccountByIdAsync(userId) ?? throw new Exception("Account not found");
+
+        account.Email = request.Email ?? account.Email;
+        account.Username = request.Username ?? account.Username;
+
+        if (!string.IsNullOrEmpty(request.Password))
+        {
+            account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        }
+
+        var updatedAccount = await _accountRepository.UpdateAccountAsync(account);
+
+        return new UpdateAccountResponse
+        {
+            Id = updatedAccount.Id,
+            Email = updatedAccount.Email,
+            Username = updatedAccount.Username,
+            CreatedAt = updatedAccount.CreatedAt,
+            UpdatedAt = DateTime.UtcNow,
+        };
+    }
 }

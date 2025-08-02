@@ -7,4 +7,5 @@ namespace Flare.AccountService.Services;
 public interface IAccountService
 {
     Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid userId);
+    Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid userId);
 }

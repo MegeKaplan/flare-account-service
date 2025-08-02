@@ -22,4 +22,11 @@ public class AccountController : ControllerBase
         var response = await _accountService.CreateAccountAsync(request, userId);
         return Ok(response);
     }
+
+    [HttpPut("{userId}")]
+    public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccountRequest request, [FromRoute] Guid userId)
+    {
+        var response = await _accountService.UpdateAccountAsync(request, userId);
+        return Ok(response);
+    }
 }
