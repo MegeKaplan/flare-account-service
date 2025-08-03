@@ -5,6 +5,7 @@ using Flare.AccountService.Repositories;
 using Flare.AccountService.DTOs;
 using Flare.AccountService.Models;
 using Flare.AccountService.Utils;
+using Flare.AccountService.DTOs.Account;
 
 namespace Flare.AccountService.Services;
 
@@ -17,14 +18,31 @@ public class AccountService : IAccountService
         _accountRepository = accountRepository;
     }
 
-    public async Task<List<Account>> GetAllAccountsAsync()
+    public async Task<List<AccountPublicDto>> GetAllAccountsAsync()
     {
-        return await _accountRepository.GetAllAccountsAsync();
+        var accounts = await _accountRepository.GetAllAccountsAsync();
+
+        return accounts.Select(account => new AccountPublicDto
+        {
+            Id = account.Id,
+            Username = account.Username,
+            CreatedAt = account.CreatedAt,
+            UpdatedAt = account.UpdatedAt
+        }).ToList();
     }
 
-    public async Task<Account?> GetAccountByIdAsync(Guid targetUserId)
+    public async Task<AccountPublicDto?> GetAccountByIdAsync(Guid targetUserId)
     {
-        return await _accountRepository.GetAccountByIdAsync(targetUserId);
+        var account = await _accountRepository.GetAccountByIdAsync(targetUserId);
+        if (account == null) return null;
+
+        return new AccountPublicDto
+        {
+            Id = account.Id,
+            Username = account.Username,
+            CreatedAt = account.CreatedAt,
+            UpdatedAt = account.UpdatedAt
+        };
     }
 
     public async Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid principalUserId, Guid targetUserId)
