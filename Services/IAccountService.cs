@@ -8,8 +8,8 @@ namespace Flare.AccountService.Services;
 public interface IAccountService
 {
     Task<List<Account>> GetAllAccountsAsync();
-    Task<Account?> GetAccountByIdAsync(Guid userId);
-    Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid userId);
+    Task<Account?> GetAccountByIdAsync(Guid targetUserId);
+    Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid principalUserId, Guid targetUserId);
     Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid principalUserId, Guid targetUserId);
-    Task DeleteAccountAsync(Guid principalUserId, Guid userId, bool hard = false);
+    Task DeleteAccountAsync(Guid principalUserId, Guid targetUserId, bool hard = false);
 }

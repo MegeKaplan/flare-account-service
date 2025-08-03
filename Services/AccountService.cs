@@ -22,18 +22,22 @@ public class AccountService : IAccountService
         return await _accountRepository.GetAllAccountsAsync();
     }
 
-    public async Task<Account?> GetAccountByIdAsync(Guid userId)
+    public async Task<Account?> GetAccountByIdAsync(Guid targetUserId)
     {
-        return await _accountRepository.GetAccountByIdAsync(userId);
+        return await _accountRepository.GetAccountByIdAsync(targetUserId);
     }
 
-    public async Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid userId)
+    public async Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid principalUserId, Guid targetUserId)
     {
+        if (!AuthorizationHelper.IsOwner(principalUserId, targetUserId)) throw new UnauthorizedAccessException("You cannot create an account for another user");
+
+        if (await _accountRepository.GetAccountByIdAsync(targetUserId) != null) throw new Exception("Account already exists");
+
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         var account = new Account
         {
-            Id = userId,
+            Id = targetUserId,
             Email = request.Email,
             Username = request.Username,
             PasswordHash = passwordHash,
@@ -42,15 +46,13 @@ public class AccountService : IAccountService
 
         var createdAccount = await _accountRepository.CreateAccountAsync(account);
 
-        var response = new CreateAccountResponse
+        return new CreateAccountResponse
         {
             Id = createdAccount.Id,
             Email = createdAccount.Email,
             Username = createdAccount.Username,
             CreatedAt = createdAccount.CreatedAt,
         };
-
-        return response;
     }
 
     public async Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid principalUserId, Guid targetUserId)

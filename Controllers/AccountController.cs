@@ -31,10 +31,14 @@ public class AccountController : ControllerBase
         return Ok(account);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request, [FromHeader(Name = "X-User-Id")] Guid userId)
+    [HttpPost("{userId}")]
+    public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request, [FromRoute] Guid userId)
     {
-        var response = await _accountService.CreateAccountAsync(request, userId);
+        var principalUserIdHeader = HttpContext.Request.Headers["X-User-Id"].FirstOrDefault();
+
+        if (!Guid.TryParse(principalUserIdHeader, out Guid principalUserId)) return Forbid();
+
+        var response = await _accountService.CreateAccountAsync(request, principalUserId, userId);
         return Ok(response);
     }
 
