@@ -14,7 +14,11 @@ builder.Services.AddDbContext<FlareDbContext>(options => options.UseNpgsql(build
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
+builder.Services.AddCors(options => { options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); });
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 app.MapGet("/", () => "Hello World!");
 
