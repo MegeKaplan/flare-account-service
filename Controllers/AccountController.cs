@@ -23,7 +23,7 @@ public class AccountController : ControllerBase
         return Ok(accounts);
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("{userId:guid}")]
     public async Task<IActionResult> GetAccountById([FromRoute] Guid userId)
     {
         var account = await _accountService.GetAccountByIdAsync(userId);
