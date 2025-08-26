@@ -10,6 +10,7 @@ public interface IAccountService
 {
     Task<List<AccountPublicDto>> GetAllAccountsAsync();
     Task<AccountPublicDto?> GetAccountByIdAsync(Guid targetUserId);
+    Task<AccountPublicDto?> GetAccountByUsernameAsync(string username);
     Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request, Guid principalUserId, Guid targetUserId);
     Task<UpdateAccountResponse> UpdateAccountAsync(UpdateAccountRequest request, Guid principalUserId, Guid targetUserId);
     Task DeleteAccountAsync(Guid principalUserId, Guid targetUserId, bool hard = false);

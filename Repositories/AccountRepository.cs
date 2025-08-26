@@ -24,6 +24,11 @@ public class AccountRepository : IAccountRepository
         return await _db.Accounts.FindAsync(userId);
     }
 
+    public async Task<Account?> GetAccountByUsernameAsync(string username)
+    {
+        return await _db.Accounts.FirstOrDefaultAsync(user => user.Username.ToLower() == username.ToLower());
+    }
+
     public async Task<Account> CreateAccountAsync(Account account)
     {
         _db.Accounts.Add(account);

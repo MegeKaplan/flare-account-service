@@ -16,4 +16,7 @@ public class CreateAccountRequest
     [MinLength(3)]
     [MaxLength(20)]
     public required string Username { get; set; }
+
+    [MaxLength(50)]
+    public string? DisplayName { get; set; }
 }

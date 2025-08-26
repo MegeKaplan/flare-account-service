@@ -13,4 +13,7 @@ public class UpdateAccountRequest
     [MinLength(3)]
     [MaxLength(20)]
     public string? Username { get; set; }
+
+    [MaxLength(50)]
+    public string? DisplayName { get; set; }
 }

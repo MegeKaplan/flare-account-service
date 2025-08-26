@@ -26,6 +26,7 @@ public class AccountService : IAccountService
         {
             Id = account.Id,
             Username = account.Username,
+            DisplayName = account.DisplayName,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt
         }).ToList();
@@ -40,6 +41,22 @@ public class AccountService : IAccountService
         {
             Id = account.Id,
             Username = account.Username,
+            DisplayName = account.DisplayName,
+            CreatedAt = account.CreatedAt,
+            UpdatedAt = account.UpdatedAt
+        };
+    }
+
+    public async Task<AccountPublicDto?> GetAccountByUsernameAsync(string username)
+    {
+        var account = await _accountRepository.GetAccountByUsernameAsync(username);
+        if (account == null) return null;
+
+        return new AccountPublicDto
+        {
+            Id = account.Id,
+            Username = account.Username,
+            DisplayName = account.DisplayName,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt
         };
@@ -51,6 +68,9 @@ public class AccountService : IAccountService
 
         if (await _accountRepository.GetAccountByIdAsync(targetUserId) != null) throw new Exception("Account already exists");
 
+        var existingAccountByUsername = await _accountRepository.GetAccountByUsernameAsync(request.Username);
+        if (existingAccountByUsername != null) throw new Exception("Username already taken");
+
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         var account = new Account
@@ -58,6 +78,7 @@ public class AccountService : IAccountService
             Id = targetUserId,
             Email = request.Email,
             Username = request.Username,
+            DisplayName = request.DisplayName,
             PasswordHash = passwordHash,
             CreatedAt = DateTime.UtcNow,
         };
@@ -69,6 +90,7 @@ public class AccountService : IAccountService
             Id = createdAccount.Id,
             Email = createdAccount.Email,
             Username = createdAccount.Username,
+            DisplayName = createdAccount.DisplayName,
             CreatedAt = createdAccount.CreatedAt,
         };
     }
@@ -79,8 +101,15 @@ public class AccountService : IAccountService
 
         var account = await _accountRepository.GetAccountByIdAsync(targetUserId) ?? throw new Exception("Account not found");
 
+        if (request.Username != null && request.Username != account.Username)
+        {
+            var existingAccountByUsername = await _accountRepository.GetAccountByUsernameAsync(request.Username);
+            if (existingAccountByUsername != null) throw new Exception("Username already taken");
+        }
+
         account.Email = request.Email ?? account.Email;
         account.Username = request.Username ?? account.Username;
+        account.DisplayName = request.DisplayName ?? account.DisplayName;
 
         if (!string.IsNullOrEmpty(request.Password))
         {
@@ -94,6 +123,7 @@ public class AccountService : IAccountService
             Id = updatedAccount.Id,
             Email = updatedAccount.Email,
             Username = updatedAccount.Username,
+            DisplayName = updatedAccount.DisplayName,
             CreatedAt = updatedAccount.CreatedAt,
             UpdatedAt = DateTime.UtcNow,
         };

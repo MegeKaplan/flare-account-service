@@ -31,6 +31,14 @@ public class AccountController : ControllerBase
         return Ok(account);
     }
 
+    [HttpGet("{username}")]
+    public async Task<IActionResult> GetAccountByUsername([FromRoute] string username)
+    {
+        var account = await _accountService.GetAccountByUsernameAsync(username);
+        if (account == null) return NotFound();
+        return Ok(account);
+    }
+
     [HttpPost("{userId}")]
     public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request, [FromRoute] Guid userId)
     {
