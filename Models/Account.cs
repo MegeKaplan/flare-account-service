@@ -9,6 +9,9 @@ public class Account
     public required string Username { get; set; }
     public string? DisplayName { get; set; }
     public required string PasswordHash { get; set; }
+    public string? ProfileImageId { get; set; }
+    public string? BannerImageId { get; set; }
+    public string? Bio { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }

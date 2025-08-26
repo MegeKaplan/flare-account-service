@@ -16,4 +16,11 @@ public class UpdateAccountRequest
 
     [MaxLength(50)]
     public string? DisplayName { get; set; }
+
+    public string? ProfileImageId { get; set; }
+
+    public string? BannerImageId { get; set; }
+
+    [MaxLength(200)]
+    public string? Bio { get; set; }
 }

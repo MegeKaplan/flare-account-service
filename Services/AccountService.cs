@@ -27,6 +27,9 @@ public class AccountService : IAccountService
             Id = account.Id,
             Username = account.Username,
             DisplayName = account.DisplayName,
+            ProfileImageId = account.ProfileImageId,
+            BannerImageId = account.BannerImageId,
+            Bio = account.Bio,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt
         }).ToList();
@@ -42,6 +45,9 @@ public class AccountService : IAccountService
             Id = account.Id,
             Username = account.Username,
             DisplayName = account.DisplayName,
+            ProfileImageId = account.ProfileImageId,
+            BannerImageId = account.BannerImageId,
+            Bio = account.Bio,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt
         };
@@ -57,6 +63,9 @@ public class AccountService : IAccountService
             Id = account.Id,
             Username = account.Username,
             DisplayName = account.DisplayName,
+            ProfileImageId = account.ProfileImageId,
+            BannerImageId = account.BannerImageId,
+            Bio = account.Bio,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt
         };
@@ -110,6 +119,9 @@ public class AccountService : IAccountService
         account.Email = request.Email ?? account.Email;
         account.Username = request.Username ?? account.Username;
         account.DisplayName = request.DisplayName ?? account.DisplayName;
+        account.ProfileImageId = request.ProfileImageId ?? account.ProfileImageId;
+        account.BannerImageId = request.BannerImageId ?? account.BannerImageId;
+        account.Bio = request.Bio ?? account.Bio;
 
         if (!string.IsNullOrEmpty(request.Password))
         {
@@ -124,6 +136,9 @@ public class AccountService : IAccountService
             Email = updatedAccount.Email,
             Username = updatedAccount.Username,
             DisplayName = updatedAccount.DisplayName,
+            ProfileImageId = updatedAccount.ProfileImageId,
+            BannerImageId = updatedAccount.BannerImageId,
+            Bio = updatedAccount.Bio,
             CreatedAt = updatedAccount.CreatedAt,
             UpdatedAt = DateTime.UtcNow,
         };
